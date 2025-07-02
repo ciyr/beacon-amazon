@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Commerce - AI-Powered Shopping Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amazon+Ember:wght@400;500;700&display=swap');
+        
+        * {
+            font-family: 'Amazon Ember', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .prime-gradient {
+            background: linear-gradient(135deg, #00A8E1 0%, #0073E6 100%);
+        }
+        
+        .amazon-gradient {
+            background: linear-gradient(135deg, #FF9900 0%, #FF6B35 100%);
+        }
+        
+        .video-container {
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+        }
+        
+        .product-card {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+        
+        .ai-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(30px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        
+        .cart-sync {
+            animation: syncPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes syncPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(90deg); }
+            50% { transform: scale(1) rotate(180deg); }
+            75% { transform: scale(1.1) rotate(270deg); }
+        }
+        
+        .screen-transition {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hidden-screen {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .active-screen {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .product-hotspot {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .product-hotspot::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid #00A8E1;
+            border-radius: 50%;
+            opacity: 0;
+            animation: ripple 2s infinite;
+        }
+        
+        @keyframes ripple {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        
+        .floating-notification {
+            animation: float 0.5s ease-out;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .product-popup {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-overlay {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .revenue-chart {
+            height: 300px;
+        }
+        
+        .integration-flow {
+            background: linear-gradient(135deg, rgba(0, 168, 225, 0.1) 0%, rgba(0, 115, 230, 0.1) 100%);
+            border: 1px solid rgba(0, 168, 225, 0.2);
+        }
+        
+        .app-mockup {
+            background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+            border: 1px solid #333;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .navbar-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #00A8E1, #0073E6, #FF9900);
+            animation: progress 3s ease-in-out infinite;
+        }
+        
+        @keyframes progress {
+            0%, 100% { width: 0%; }
+            50% { width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-hidden">
+    <div id="app" class="h-screen w-screen relative">
+        <!-- Navigation Header -->
+        <header class="fixed top-0 w-full z-50 navbar-blur">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 prime-gradient rounded-lg flex items-center justify-center">
+                            <i class="fas fa-play text-white text-lg"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold prime-gradient bg-clip-text text-transparent">Prime Commerce</h1>
+                    </div>
+                    <nav class="flex space-x-6">
+                        <button onclick="showScreen('video')" class="nav-btn text-white border-b-2 border-blue-500 pb-1 px-2 transition-all hover:text-blue-300" data-screen="video">Video Player</button>
+                        <button onclick="showScreen('cart')" class="nav-btn text-gray-400 hover:text-white transition-colors pb-1 px-2" data-screen="cart">Cart Sync</button>
+                        <button onclick="showScreen('revenue')" class="nav-btn text-gray-400 hover:text-white transition-colors pb-1 px-2" data-screen="revenue">Revenue Dashboard</button>
+                        <button onclick="showScreen('integration')" class="nav-btn text-gray-400 hover:text-white transition-colors pb-1 px-2" data-screen="integration">Integration</button>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                        <div class="w-2 h-2 bg-green-500 rounded-full ai-pulse"></div>
+                        <span class="text-sm font-medium">AI Active</span>
+                    </div>
+                    <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                        <i class="fas fa-shopping-cart text-yellow-400"></i>
+                        <span id="cart-count" class="text-sm font-medium">0</span>
+                    </div>
+                    <div class="w-10 h-10 amazon-gradient rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Video Player Screen -->
+        <div id="video-screen" class="screen-transition active-screen absolute inset-0 pt-20">
+            <div class="h-full flex flex-col">
+                <!-- Video Player Area -->
+                <div class="flex-1 relative video-container">
+                    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+                        <!-- Simulated Video Content -->
+                        <div class="w-full h-full relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-900 via-blue-900 to-pink-900 opacity-60"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="mb-6">
+                                        <div class="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-play text-5xl text-white"></i>
+                                        </div>
+                                    </div>
+                                    <h2 class="text-5xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">The Marvelous Mrs. Maisel</h2>
+                                    <p class="text-2xl text-gray-300 mb-2">Season 4, Episode 3</p>
+                                    <p class="text-lg text-gray-400">"The Pigeon"</p>
+                                </div>
+                            </div>
+                            
+                            <!-- AI Product Detection Overlay -->
+                            <div id="product-overlay" class="absolute inset-0 hidden">
+                                <!-- Product Hotspots -->
+                                <div class="absolute top-1/4 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
+                                    <div class="product-hotspot" onclick="showProductPopup(1)">
+                                        <div class="w-6 h-6 bg-blue-500 rounded-full ai-pulse cursor-pointer flex items-center justify-center">
+                                            <i class="fas fa-shopping-bag text-xs text-white"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="absolute top-2/3 right-1/4 transform translate-x-1/2 -translate-y-1/2">
+                                    <div class="product-hotspot" onclick="showProductPopup(2)">
+                                        <div class="w-6 h-6 bg-blue-500 rounded-full ai-pulse cursor-pointer flex items-center justify-center">
+                                            <i class="fas fa-chair text-xs text-white"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="absolute bottom-1/4 left-1/4 transform -translate-x-1/2 translate-y-1/2">
+                                    <div class="product-hotspot" onclick="showProductPopup(3)">
+                                        <div class="w-6 h-6 bg-blue-500 rounded-full ai-pulse cursor-pointer flex items-center justify-center">
+                                            <i class="fas fa-wine-glass text-xs text-white"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Control Bar -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black to-transparent p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <button id="play-pause-btn" onclick="togglePlayPause()" class="w-14 h-14 glass-effect rounded-full flex items-center justify-center hover:bg-white hover:bg-opacity-20 transition-all">
+                                    <i class="fas fa-pause text-2xl"></i>
+                                </button>
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-sm font-medium">1:23:45</span>
+                                    <div class="w-80 h-2 bg-gray-700 rounded-full relative">
+                                        <div class="w-1/3 h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+                                        <div class="absolute top-1/2 left-1/3 w-4 h-4 bg-white rounded-full transform -translate-y-1/2 shadow-lg"></div>
+                                    </div>
+                                    <span class="text-sm font-medium">2:15:30</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <button class="px-4 py-2 glass-effect rounded-lg hover:bg-white hover:bg-opacity-10 transition-all flex items-center space-x-2">
+                                    <i class="fas fa-cast"></i>
+                                    <span>Cast</span>
+                                </button>
+                                <button class="px-4 py-2 glass-effect rounded-lg hover:bg-white hover:bg-opacity-10 transition-all flex items-center space-x-2">
+                                    <i class="fas fa-heart"></i>
+                                    <span>More Like This</span>
+                                </button>
+                                <button onclick="toggleEcommerce()" class="px-6 py-2 prime-gradient rounded-lg hover:opacity-90 transition-all flex items-center space-x-2 font-medium">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span>Shop Scene</span>
+                                </button>
+                                <button class="px-4 py-2 glass-effect rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Shopping Mode Toggle -->
+                        <div id="ai-mode-indicator" class="hidden integration-flow rounded-lg p-4 mb-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">AI Shopping Mode Active</h4>
+                                        <p class="text-sm text-gray-300">Click on highlighted items to explore products</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-blue-400">3</div>
+                                    <div class="text-sm text-gray-300">items detected</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Synchronization Screen -->
+        <div id="cart-screen" class="screen-transition hidden-screen absolute inset-0 pt-20">
+            <div class="h-full p-8 overflow-y-auto">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-4xl font-bold mb-4">Cross-App Cart Synchronization</h2>
+                        <p class="text-xl text-gray-400">Seamless shopping experience across all Amazon platforms</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <!-- Prime Video Cart -->
+                        <div class="glass-effect rounded-xl p-6 hover-lift">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-2xl font-semibold flex items-center space-x-3">
+                                    <div class="w-10 h-10 prime-gradient rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <span>Prime Video Cart</span>
+                                </h3>
+                                <div class="cart-sync w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                            </div>
+                            
+                            <div id="prime-cart-items" class="space-y-4 min-h-64">
+                                <div class="text-center py-12 text-gray-400">
+                                    <i class="fas fa-shopping-cart text-6xl mb-4 opacity-50"></i>
+                                    <p class="text-lg">Your cart is empty</p>
+                                    <p class="text-sm">Add items from video content to see them here</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 pt-4 border-t border-gray-700">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xl font-semibold">Total:</span>
+                                    <span id="prime-total" class="text-2xl font-bold text-yellow-400">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Amazon App Cart -->
+                        <div class="glass-effect rounded-xl p-6 hover-lift">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-2xl font-semibold flex items-center space-x-3">
+                                    <div class="w-10 h-10 amazon-gradient rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <span>Amazon Cart</span>
+                                </h3>
+                                <div class="cart-sync w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-sync-alt text-black"></i>
+                                </div>
+                            </div>
+                            
+                            <div id="amazon-cart-items" class="space-y-4 min-h-64">
+                                <div class="text-center py-12 text-gray-400">
+                                    <i class="fas fa-shopping-cart text-6xl mb-4 opacity-50"></i>
+                                    <p class="text-lg">Synced from Prime Video</p>
+                                    <p class="text-sm">Items will appear here automatically</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 pt-4 border-t border-gray-700">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xl font-semibold">Total:</span>
+                                    <span id="amazon-total" class="text-2xl font-bold text-yellow-400">$0.00</span>
+                                </div>
+                                <button class="w-full amazon-gradient text-black py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity">
+                                    Proceed to Checkout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sync Flow Visualization -->
+                    <div class="integration-flow rounded-xl p-8">
+                        <h3 class="text-2xl font-semibold mb-8 text-center">Real-time Synchronization Flow</h3>
+                        <div class="flex items-center justify-center space-x-12">
+                            <div class="text-center">
+                                <div class="w-20 h-20 prime-gradient rounded-full flex items-center justify-center mb-4 hover-lift">
+                                    <i class="fas fa-video text-3xl"></i>
+                                </div>
+                                <span class="font-medium">Prime Video</span>
+                                <p class="text-sm text-gray-400 mt-1">Add to cart</p>
+                            </div>
+                            
+                            <div class="flex-1 flex items-center justify-center relative">
+                                <div class="w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-yellow-500 rounded-full relative overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-full progress-bar rounded-full"></div>
+                                </div>
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <div class="w-6 h-6 bg-white rounded-full cart-sync flex items-center justify-center">
+                                        <i class="fas fa-bolt text-xs text-black"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="w-20 h-20 amazon-gradient rounded-full flex items-center justify-center mb-4 hover-lift">
+                                    <i class="fas fa-shopping-cart text-3xl text-black"></i>
+                                </div>
+                                <span class="font-medium">Amazon App</span>
+                                <p class="text-sm text-gray-400 mt-1">Auto-sync</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 text-center">
+                            <p class="text-gray-300 text-lg">Items added to cart in Prime Video are instantly synchronized with your Amazon account using real-time cloud infrastructure</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Dashboard Screen -->
+        <div id="revenue-screen" class="screen-transition hidden-screen absolute inset-0 pt-20">
+            <div class="h-full p-8 overflow-y-auto">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-4xl font-bold mb-4">Revenue Sharing Dashboard</h2>
+                        <p class="text-xl text-gray-400">Transparent profit sharing across the ecosystem</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="glass-effect rounded-xl p-6 hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Total Revenue</h3>
+                                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-dollar-sign text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-4xl font-bold text-green-400 mb-2">$1,245,890</div>
+                            <div class="flex items-center text-sm text-green-300">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>+12.5% from last month</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-effect rounded-xl p-6 hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Conversion Rate</h3>
+                                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-4xl font-bold text-blue-400 mb-2">8.4%</div>
+                            <div class="flex items-center text-sm text-blue-300">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>+2.1% from last month</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-effect rounded-xl p-6 hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Active IPs</h3>
+                                <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-tv text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-4xl font-bold text-purple-400 mb-2">247</div>
+                            <div class="flex items-center text-sm text-purple-300">
+                                <i class="fas fa-plus mr-1"></i>
+                                <span>+18 new this month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts and Performance -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-xl font-semibold mb-6">Revenue Trends</h3>
+                            <div class="revenue-chart">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-xl font-semibold mb-6">Top Performing IPs</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 rounded-lg hover-lift">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-14 h-14 bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg flex items-center justify-center">
+                                            <span class="font-bold text-lg">MM</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold text-lg">The Marvelous Mrs. Maisel</h4>
+                                            <p class="text-sm text-gray-400">Season 4 • Drama</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xl font-bold text-green-400">$89,450</div>
+                                        <div class="text-sm text-gray-400">24.5% share</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 rounded-lg hover-lift">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-14 h-14 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
+                                            <span class="font-bold text-lg">TB</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold text-lg">The Boys</h4>
+                                            <p class="text-sm text-gray-400">Season 3 • Action</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xl font-bold text-green-400">$76,230</div>
+                                        <div class="text-sm text-gray-400">18.7% share</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 rounded-lg hover-lift">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-14 h-14 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
+                                            <span class="font-bold text-lg">JR</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold text-lg">Jack Ryan</h4>
+                                            <p class="text-sm text-gray-400">Season 3 • Thriller</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xl font-bold text-green-400">$65,890</div>
+                                        <div class="text-sm text-gray-400">15.2% share</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Revenue Distribution -->
+                    <div class="glass-effect rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-6">Revenue Distribution Model</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-medium">IP Holders</span>
+                                    <span class="font-bold text-green-400">60%</span>
+                                </div>
+                                <div class="w-full h-4 bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="w-3/5 h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-2">Content creators and studios</p>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-medium">Amazon Prime</span>
+                                    <span class="font-bold text-blue-400">25%</span>
+                                </div>
+                                <div class="w-full h-4 bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="w-1/4 h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-2">Platform and infrastructure</p>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-medium">Brand Partners</span>
+                                    <span class="font-bold text-yellow-400">15%</span>
+                                </div>
+                                <div class="w-full h-4 bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="w-3/20 h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full"></div>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-2">Product placement and partnerships</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integration Screen -->
+        <div id="integration-screen" class="screen-transition hidden-screen absolute inset-0 pt-20">
+            <div class="h-full p-8 overflow-y-auto">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-4xl font-bold mb-4">Amazon Ecosystem Integration</h2>
+                        <p class="text-xl text-gray-400">Seamless cross-platform experience powered by AI</p>
+                    </div>
+                    
+                    <!-- Integration Flow -->
+                    <div class="integration-flow rounded-xl p-8 mb-8">
+                        <h3 class="text-2xl font-semibold mb-8 text-center">Complete Integration Workflow</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div class="text-center">
+                                <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center hover-lift">
+                                    <i class="fas fa-eye text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">AI Detection</h4>
+                                <p class="text-sm text-gray-400">Advanced machine learning identifies products, clothing, and decor in real-time video content</p>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center hover-lift">
+                                    <i class="fas fa-mouse-pointer text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">One-Click Shop</h4>
+                                <p class="text-sm text-gray-400">Instant product information, reviews, and purchase options with contextual recommendations</p>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center hover-lift">
+                                    <i class="fas fa-sync-alt text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">Cart Sync</h4>
+                                <p class="text-sm text-gray-400">Real-time synchronization across all Amazon applications and devices</p>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center hover-lift">
+                                    <i class="fas fa-shipping-fast text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">Prime Delivery</h4>
+                                <p class="text-sm text-gray-400">Automatic application of Prime benefits with same-day delivery options</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- App Integration Mockups -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <!-- Prime Video App -->
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-2xl font-semibold mb-6 flex items-center space-x-3">
+                                <div class="w-10 h-10 prime-gradient rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <span>Prime Video Mobile</span>
+                            </h3>
+                            
+                            <div class="app-mockup rounded-lg p-6 mb-6">
+                                <div class="bg-gradient-to-r from-gray-800 to-gray-700 h-48 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900 to-blue-900 opacity-70"></div>
+                                    <div class="relative text-center">
+                                        <i class="fas fa-play-circle text-6xl text-white opacity-80 mb-2"></i>
+                                        <p class="text-sm font-medium">Video Playing</p>
+                                    </div>
+                                    
+                                    <!-- Simulated product hotspots -->
+                                    <div class="absolute top-4 right-4 w-4 h-4 bg-blue-500 rounded-full ai-pulse"></div>
+                                    <div class="absolute bottom-6 left-6 w-4 h-4 bg-blue-500 rounded-full ai-pulse"></div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex space-x-3">
+                                        <button class="w-10 h-10 glass-effect rounded-full flex items-center justify-center">
+                                            <i class="fas fa-pause"></i>
+                                        </button>
+                                        <button class="w-10 h-10 glass-effect rounded-full flex items-center justify-center">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </div>
+                                    <button class="px-4 py-2 prime-gradient rounded-lg text-sm font-medium">
+                                        <i class="fas fa-shopping-cart mr-2"></i>Shop Scene
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm text-gray-400">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-400"></i>
+                                    <span>AI-powered product detection</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-400"></i>
+                                    <span>Contextual shopping integration</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-400"></i>
+                                    <span>Seamless cart management</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Amazon Main App -->
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-2xl font-semibold mb-6 flex items-center space-x-3">
+                                <div class="w-10 h-10 amazon-gradient rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-mobile-alt text-black"></i>
+                                </div>
+                                <span>Amazon Shopping App</span>
+                            </h3>
+                            
+                            <div class="bg-white rounded-lg p-6 mb-6">
+                                <div class="text-black">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-semibold text-lg">Your Cart</h4>
+                                        <div class="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
+                                            <i class="fas fa-bolt mr-1"></i>From Prime Video
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-3">
+                                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                                            <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-tshirt text-gray-500"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="font-medium">Vintage Floral Dress</p>
+                                                <p class="text-sm text-gray-600">Similar to character's outfit</p>
+                                                <p class="text-lg font-bold text-orange-600">$89.99</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg opacity-60">
+                                            <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-chair text-gray-500"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="font-medium">Mid-Century Chair</p>
+                                                <p class="text-sm text-gray-600">As seen in scene</p>
+                                                <p class="text-lg font-bold text-orange-600">$299.99</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-3 rounded-lg mt-4 font-bold">
+                                        Proceed to Checkout
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm text-gray-400">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-400"></i>
+                                    <span>Automatic cart synchronization</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-400"></i>
+                                    <span>Prime benefits automatically applied</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-400"></i>
+                                    <span>Cross-platform purchase history</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Technical Architecture -->
+                    <div class="glass-effect rounded-xl p-8">
+                        <h3 class="text-2xl font-semibold mb-8 text-center">Technical Architecture</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="text-center p-6 bg-gray-800 bg-opacity-50 rounded-xl hover-lift">
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-brain text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-3">AI/ML Engine</h4>
+                                <p class="text-sm text-gray-400">Advanced computer vision for real-time product recognition and personalized recommendation algorithms</p>
+                            </div>
+                            
+                            <div class="text-center p-6 bg-gray-800 bg-opacity-50 rounded-xl hover-lift">
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-cloud text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-3">Cloud Infrastructure</h4>
+                                <p class="text-sm text-gray-400">AWS services powering scalable, real-time data processing and cross-platform synchronization</p>
+                            </div>
+                            
+                            <div class="text-center p-6 bg-gray-800 bg-opacity-50 rounded-xl hover-lift">
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-3">Security & Privacy</h4>
+                                <p class="text-sm text-gray-400">End-to-end encryption, privacy-first data handling, and secure payment processing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Popup Modal -->
+    <div id="product-popup" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="hideProductPopup()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="product-popup max-w-4xl w-full max-h-full overflow-y-auto rounded-2xl">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-3xl font-bold" id="popup-title">Product Details</h2>
+                        <button onclick="hideProductPopup()" class="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:bg-white hover:bg-opacity-20 transition-all">
+                            <i class="fas fa-times text-lg"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Product Image -->
+                        <div class="space-y-4">
+                            <div id="popup-image" class="w-full h-80 bg-gray-800 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-image text-6xl text-gray-600"></i>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2">
+                                <div class="h-16 bg-gray-800 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-600"></i>
+                                </div>
+                                <div class="h-16 bg-gray-800 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-600"></i>
+                                </div>
+                                <div class="h-16 bg-gray-800 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-600"></i>
+                                </div>
+                                <div class="h-16 bg-gray-800 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="space-y-6">
+                            <div>
+                                <h3 id="popup-product-name" class="text-2xl font-bold mb-2">Product Name</h3>
+                                <p id="popup-description" class="text-gray-400 mb-4">Product description goes here</p>
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <div class="flex items-center space-x-1">
+                                        <div class="flex space-x-1">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star-half-alt text-yellow-400"></i>
+                                        </div>
+                                        <span class="text-sm text-gray-400 ml-2">4.5 (2,341 reviews)</span>
+                                    </div>
+                                </div>
+                                <div class="text-4xl font-bold text-yellow-400 mb-6" id="popup-price">$0.00</div>
+                            </div>
+                            
+                            <!-- Size/Color Options -->
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-semibold mb-2">Size</h4>
+                                    <div class="flex space-x-2">
+                                        <button class="px-4 py-2 border border-gray-600 rounded-lg hover:border-blue-500 transition-colors">S</button>
+                                        <button class="px-4 py-2 border border-gray-600 rounded-lg hover:border-blue-500 transition-colors">M</button>
+                                        <button class="px-4 py-2 border border-blue-500 bg-blue-500 bg-opacity-20 rounded-lg">L</button>
+                                        <button class="px-4 py-2 border border-gray-600 rounded-lg hover:border-blue-500 transition-colors">XL</button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-semibold mb-2">Color</h4>
+                                    <div class="flex space-x-2">
+                                        <div class="w-8 h-8 bg-red-500 rounded-full border-2 border-white cursor-pointer"></div>
+                                        <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-gray-600 cursor-pointer"></div>
+                                        <div class="w-8 h-8 bg-green-500 rounded-full border-2 border-gray-600 cursor-pointer"></div>
+                                        <div class="w-8 h-8 bg-black rounded-full border-2 border-gray-600 cursor-pointer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="space-y-3">
+                                <button onclick="addToCartFromPopup()" class="w-full prime-gradient py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity">
+                                    <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                                </button>
+                                <button class="w-full amazon-gradient text-black py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity">
+                                    <i class="fas fa-bolt mr-2"></i>Buy Now
+                                </button>
+                            </div>
+                            
+                            <!-- Additional Info -->
+                            <div class="pt-6 border-t border-gray-700">
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-truck text-blue-400"></i>
+                                        <span>FREE Prime delivery by tomorrow</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-undo text-green-400"></i>
+                                        <span>30-day return policy</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-shield-alt text-yellow-400"></i>
+                                        <span>2-year warranty included</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reviews Section -->
+                    <div class="mt-8 pt-8 border-t border-gray-700">
+                        <h3 class="text-xl font-semibold mb-4">Customer Reviews</h3>
+                        <div class="space-y-4">
+                            <div class="glass-effect p-4 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="flex space-x-1">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                        </div>
+                                        <span class="font-semibold">Sarah M.</span>
+                                    </div>
+                                    <span class="text-sm text-gray-400">Verified Purchase</span>
+                                </div>
+                                <p class="text-gray-300">"Absolutely love this! Exactly as shown in the show. Great quality and fast shipping."</p>
+                            </div>
+                            
+                            <div class="glass-effect p-4 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="flex space-x-1">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="far fa-star text-gray-400"></i>
+                                        </div>
+                                        <span class="font-semibold">Mike R.</span>
+                                    </div>
+                                    <span class="text-sm text-gray-400">Verified Purchase</span>
+                                </div>
+                                <p class="text-gray-300">"Good quality, matches the description. Delivery was quick with Prime."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPlaying = true;
+        let aiModeActive = false;
+        let cartItems = [];
+        let currentScreen = 'video';
+        let currentProductId = null;
+        
+        const products = {
+            1: { 
+                name: 'Vintage Floral Dress', 
+                price: 89.99, 
+                icon: 'tshirt',
+                description: 'Elegant vintage-inspired floral dress similar to Midge\'s iconic style. Perfect for special occasions with a timeless 1950s silhouette.',
+                reviews: 4.5,
+                reviewCount: 2341
+            },
+            2: { 
+                name: 'Mid-Century Accent Chair', 
+                price: 299.99, 
+                icon: 'chair',
+                description: 'Stylish mid-century modern accent chair as featured in the show. Premium upholstery with solid wood legs.',
+                reviews: 4.3,
+                reviewCount: 1876
+            },
+            3: { 
+                name: 'Vintage Wine Glasses Set', 
+                price: 49.99, 
+                icon: 'wine-glass',
+                description: 'Elegant set of 4 vintage-style wine glasses perfect for entertaining. Crystal clear glass with classic design.',
+                reviews: 4.7,
+                reviewCount: 892
+            }
+        };
+        
+        // Initialize Charts
+        function initializeCharts() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: [65000, 72000, 68000, 89000, 95000, 102000, 118000, 134000, 125000, 145000, 158000, 172000],
+                        borderColor: '#00A8E1',
+                        backgroundColor: 'rgba(0, 168, 225, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#9CA3AF',
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#9CA3AF'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function showScreen(screenId) {
+            // Hide all screens
+            const screens = ['video', 'cart', 'revenue', 'integration'];
+            screens.forEach(screen => {
+                const element = document.getElementById(screen + '-screen');
+                if (screen === screenId) {
+                    element.classList.remove('hidden-screen');
+                    element.classList.add('active-screen');
+                } else {
+                    element.classList.add('hidden-screen');
+                    element.classList.remove('active-screen');
+                }
+            });
+            
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.screen === screenId) {
+                    btn.classList.remove('text-gray-400', 'border-transparent');
+                    btn.classList.add('text-white', 'border-blue-500', 'border-b-2');
+                } else {
+                    btn.classList.add('text-gray-400', 'border-transparent');
+                    btn.classList.remove('text-white', 'border-blue-500', 'border-b-2');
+                }
+            });
+            
+            currentScreen = screenId;
+            
+            // Initialize charts when revenue screen is shown
+            if (screenId === 'revenue') {
+                setTimeout(initializeCharts, 100);
+            }
+        }
+        
+        function togglePlayPause() {
+            const btn = document.getElementById('play-pause-btn');
+            const icon = btn.querySelector('i');
+            
+            if (isPlaying) {
+                icon.className = 'fas fa-play text-2xl';
+                isPlaying = false;
+            } else {
+                icon.className = 'fas fa-pause text-2xl';
+                isPlaying = true;
+            }
+        }
+        
+        function toggleEcommerce() {
+            const overlay = document.getElementById('product-overlay');
+            const indicator = document.getElementById('ai-mode-indicator');
+            
+            if (aiModeActive) {
+                overlay.classList.add('hidden');
+                indicator.classList.add('hidden');
+                aiModeActive = false;
+            } else {
+                overlay.classList.remove('hidden');
+                indicator.classList.remove('hidden');
+                aiModeActive = true;
+            }
+        }
+        
+        function showProductPopup(productId) {
+            const product = products[productId];
+            const popup = document.getElementById('product-popup');
+            
+            currentProductId = productId;
+            
+            // Update popup content
+            document.getElementById('popup-title').textContent = 'Product Details';
+            document.getElementById('popup-product-name').textContent = product.name;
+            document.getElementById('popup-description').textContent = product.description;
+            document.getElementById('popup-price').textContent = `$${product.price.toFixed(2)}`;
+            
+            // Update product image
+            const imageContainer = document.getElementById('popup-image');
+            imageContainer.innerHTML = `<i class="fas fa-${product.icon} text-8xl text-gray-400"></i>`;
+            
+            // Show popup
+            popup.classList.remove('hidden');
+            
+            // Add animation
+            setTimeout(() => {
+                popup.querySelector('.product-popup').classList.add('slide-in');
+            }, 10);
+        }
+        
+        function hideProductPopup() {
+            const popup = document.getElementById('product-popup');
+            popup.classList.add('hidden');
+            currentProductId = null;
+        }
+        
+        function addToCartFromPopup() {
+            if (currentProductId) {
+                addToCart(currentProductId);
+                hideProductPopup();
+            }
+        }
+        
+        function addToCart(productId) {
+            const product = products[productId];
+            
+            // Check if item already exists in cart
+            const existingItem = cartItems.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    id: productId,
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            // Show notification
+            showNotification(`${product.name} added to cart!`);
+            
+            // Update cart displays
+            updateCartDisplays();
+            updateCartCount();
+        }
+        
+        function updateCartCount() {
+            const cartCount = document.getElementById('cart-count');
+            const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+        
+        function updateCartDisplays() {
+            const primeCartItems = document.getElementById('prime-cart-items');
+            const amazonCartItems = document.getElementById('amazon-cart-items');
+            const primeTotal = document.getElementById('prime-total');
+            const amazonTotal = document.getElementById('amazon-total');
+            
+            // Clear existing items
+            primeCartItems.innerHTML = '';
+            amazonCartItems.innerHTML = '';
+            
+            let total = 0;
+            
+            if (cartItems.length === 0) {
+                const emptyState = `
+                    <div class="text-center py-12 text-gray-400">
+                        <i class="fas fa-shopping-cart text-6xl mb-4 opacity-50"></i>
+                        <p class="text-lg">Your cart is empty</p>
+                        <p class="text-sm">Add items from video content to see them here</p>
+                    </div>
+                `;
+                primeCartItems.innerHTML = emptyState;
+                amazonCartItems.innerHTML = emptyState.replace('video content', 'Prime Video');
+            } else {
+                // Add cart items to both displays
+                cartItems.forEach(item => {
+                    total += item.price * item.quantity;
+                    
+                    const cartItemHTML = `
+                        <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg slide-in hover-lift">
+                            <div class="w-16 h-16 bg-gray-700 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-${item.icon} text-2xl text-gray-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-lg">${item.name}</h4>
+                                <p class="text-sm text-gray-400">Qty: ${item.quantity}</p>
+                                <div class="flex items-center space-x-1 mt-1">
+                                    <div class="flex space-x-1">
+                                        ${Array(5).fill().map((_, i) => 
+                                            `<i class="fas fa-star ${i < Math.floor(item.reviews) ? 'text-yellow-400' : 'text-gray-500'} text-xs"></i>`
+                                        ).join('')}
+                                    </div>
+                                    <span class="text-xs text-gray-400">(${item.reviewCount})</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xl font-bold text-yellow-400">$${(item.price * item.quantity).toFixed(2)}</div>
+                                <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-300 text-sm mt-1">
+                                    <i class="fas fa-trash mr-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    primeCartItems.innerHTML += cartItemHTML;
+                    amazonCartItems.innerHTML += cartItemHTML;
+                });
+            }
+            
+            // Update totals
+            primeTotal.textContent = `$${total.toFixed(2)}`;
+            amazonTotal.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        function removeFromCart(productId) {
+            cartItems = cartItems.filter(item => item.id !== productId);
+            updateCartDisplays();
+            updateCartCount();
+            showNotification('Item removed from cart', 'info');
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-600' : 'bg-blue-600';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            
+            notification.className = `fixed top-24 right-6 ${bgColor} text-white px-6 py-4 rounded-lg shadow-lg z-50 floating-notification`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${icon}"></i>
+                    <span class="font-medium">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            showScreen('video');
+            updateCartDisplays();
+            updateCartCount();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                switch(e.key) {
+                    case ' ':
+                        e.preventDefault();
+                        togglePlayPause();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        toggleEcommerce();
+                        break;
+                    case 'Escape':
+                        hideProductPopup();
+                        break;
+                }
+            });
+            
+            // Simulate AI activity
+            setInterval(() => {
+                if (aiModeActive) {
+                    const hotspots = document.querySelectorAll('.product-hotspot .ai-pulse');
+                    hotspots.forEach(hotspot => {
+                        hotspot.style.opacity = Math.random() > 0.3 ? '1' : '0.6';
+                    });
+                }
+            }, 1500);
+        });
+        
+        // Demo cart sync animation
+        function simulateCartSync() {
+            const syncButtons = document.querySelectorAll('.cart-sync');
+            syncButtons.forEach(button => {
+                button.style.animation = 'none';
+                setTimeout(() => {
+                    button.style.animation = 'syncPulse 1s ease-in-out';
+                }, 10);
+            });
+        }
+        
+        // Add demo data periodically
+        setTimeout(() => {
+            if (cartItems.length === 0) {
+                showNotification('Try clicking "Shop Scene" to explore AI-powered product detection!', 'info');
+            }
+        }, 5000);
+        
+        // Simulate some demo activity
+        setInterval(() => {
+            if (Math.random() > 0.95 && cartItems.length > 0) {
+                simulateCartSync();
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
+
+
